@@ -39,7 +39,325 @@
     
   </head>
 
-<body>
+
+<style>
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #ffffff;
+  --border-color: #0000001c;
+  --service-bg: #f7f8fc;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #e8e8e8;
+  --card-bg: #252525;
+  --border-color: #3a3a3a;
+  --service-bg: #2d2d2d;
+}
+
+[data-theme="dark"] body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .main-nav {
+  background: transparent;
+}
+
+[data-theme="dark"] .main-nav.nav-bg {
+  background: var(--card-bg) !important;
+  box-shadow: 0px 0px 12px 0px rgba(255, 255, 255, 0.05);
+}
+
+ 
+[data-theme="dark"] .main-nav.main-nav-colored {
+  background: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .main-nav .nav-link {
+  color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .main-nav.nav-bg .nav-link {
+  color: var(--text-color) !important;
+}
+
+ 
+[data-theme="dark"] .navbar-toggler .icon-bar {
+  background-color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .service {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .service-item {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .service-item i {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .service-item p {
+  color: #b8b8b8;
+}
+
+ 
+[data-theme="dark"] h1, [data-theme="dark"] h2, 
+[data-theme="dark"] h3, [data-theme="dark"] h4, 
+[data-theme="dark"] h5, [data-theme="dark"] h6 {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] p {
+  color: #b8b8b8;
+}
+
+ 
+[data-theme="dark"] .blog {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .blog-content {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .blog-content h3 a {
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .footer {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .footer-menu ul li a {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .footer p {
+  color: #b8b8b8;
+}
+
+ 
+[data-theme="dark"] .pricing {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .pricing-wraper .pricing-item {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .pricing-item span.price {
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .testimonial {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .testimonial-content {
+  background: var(--card-bg);
+}
+
+ 
+[data-theme="dark"] .contact {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .contact-aria {
+  background: var(--card-bg);
+}
+
+[data-theme="dark"] .form-control {
+  background: var(--bg-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] .form-control:focus {
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-color: #4a9eff;
+}
+
+ 
+[data-theme="dark"] .gallery {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .gallery-item {
+  background: var(--card-bg);
+}
+
+ 
+[data-theme="dark"] .faq {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .faq-content h3 {
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .team {
+  background: var(--service-bg);
+}
+
+[data-theme="dark"] .team-member {
+  background: var(--card-bg);
+}
+
+ 
+[data-theme="dark"] .page-header {
+  background: var(--bg-color);
+}
+
+[data-theme="dark"] .page-header h2 {
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .privacy-policy-content{
+  background: var(--bg-color) !important;
+}
+
+[data-theme="dark"] .single-page {
+  background: var(--bg-color);
+}
+
+[data-theme="dark"] .single-page-content {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .content-block {
+  background: var(--bg-color);
+}
+
+ 
+[data-theme="dark"] ul li,
+[data-theme="dark"] ol li {
+  color: #b8b8b8;
+}
+
+ 
+[data-theme="dark"] a {
+  color: #4a9eff;
+}
+
+[data-theme="dark"] a:hover {
+  color: #6b8dff;
+}
+
+ 
+[data-theme="dark"] .breadcrumb {
+  background: var(--card-bg);
+}
+
+[data-theme="dark"] .breadcrumb-item a {
+  color: #4a9eff;
+}
+
+[data-theme="dark"] .breadcrumb-item.active {
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] .card,
+[data-theme="dark"] .content,
+[data-theme="dark"] .page-content,
+[data-theme="dark"] article {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+ 
+[data-theme="dark"] section {
+  background-color: var(--bg-color);
+}
+
+[data-theme="dark"] .section-padding {
+  background: var(--bg-color);
+}
+
+ 
+[data-theme="dark"] .text-muted {
+  color: #888 !important;
+}
+
+ 
+.theme-toggle-btn {
+  background: transparent;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-left: 15px;
+  position: relative;
+}
+
+.theme-toggle-btn:hover {
+  background: #007bff;
+  transform: rotate(180deg);
+}
+
+.theme-toggle-btn:hover .theme-icon {
+  color: #ffffff;
+}
+
+.theme-icon {
+  font-size: 20px;
+  color: #007bff;
+  transition: all 0.3s ease-in-out;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  border-color: #4a9eff;
+}
+
+[data-theme="dark"] .theme-icon {
+  color: #4a9eff;
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+  background: #4a9eff;
+}
+
+ 
+@media (max-width: 991px) {
+  .theme-toggle-btn {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+</style>
+
+
+<script>
+(function() {
+  const theme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script><body>
 <header class="header">
   <nav class="main-nav navbar navbar-expand-lg main-nav-colored">
     <div class="container-fluid">
@@ -88,6 +406,11 @@
              <a class="nav-link scroll-to" href="/HyMotor-website-public/contact/">Contact</a>
           </li>
           
+          <li class="nav-item">
+            <button id="theme-toggle-btn" aria-label="Toggle dark mode" class="theme-toggle-btn">
+  <i class="ti-light-bulb theme-icon"></i>
+</button>
+          </li>
         </ul>
       </div>
     </div>
@@ -237,5 +560,38 @@
 
  
 <script src="https://thomasdalberto.github.io/HyMotor-website-public/js/script.min.js"></script>
-</body>
+
+<script>
+(function() {
+  'use strict';
+
+  const getTheme = () => localStorage.getItem('theme') || 'dark';
+  
+  const setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    updateIcon(theme);
+  };
+
+  const updateIcon = (theme) => {
+    const icon = document.querySelector('.theme-icon');
+    if (icon) {
+      icon.className = theme === 'dark' ? 'ti-shine theme-icon' : 'ti-light-bulb theme-icon';
+    }
+  };
+
+  const toggleTheme = () => {
+    const newTheme = getTheme() === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setTheme(getTheme());
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', toggleTheme);
+    }
+  });
+})();
+</script></body>
 </html>
