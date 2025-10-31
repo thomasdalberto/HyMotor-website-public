@@ -50,11 +50,12 @@
 }
 
 [data-theme="dark"] {
-  --bg-color: #1a1a1a;
+  --bg-color: #2d2d2d;
   --text-color: #e8e8e8;
-  --card-bg: #252525;
+   
+  --card-bg: #2d2d2d;
   --border-color: #3a3a3a;
-  --service-bg: #2d2d2d;
+  --service-bg: #1a1a1a;
 }
 
 [data-theme="dark"] body {
@@ -68,7 +69,7 @@
 }
 
 [data-theme="dark"] .main-nav.nav-bg {
-  background: var(--card-bg) !important;
+  background: var(--bg-color) !important;
   box-shadow: 0px 0px 12px 0px rgba(255, 255, 255, 0.05);
 }
 
@@ -121,7 +122,7 @@
 
  
 [data-theme="dark"] .blog {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .blog-content {
@@ -146,9 +147,17 @@
   color: #b8b8b8;
 }
 
+[data-theme="dark"] .footer-icon ul li a {
+color: #b8b8b8;
+}
+
+[data-theme="dark"] .footer-icon:hover ul li a {
+color: #6b8dff;
+}
+
  
 [data-theme="dark"] .pricing {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .pricing-wraper .pricing-item {
@@ -156,22 +165,34 @@
   border-color: var(--border-color);
 }
 
-[data-theme="dark"] .pricing-item span.price {
+[data-theme="dark"] .pricing-wraper:hover .pricing-item span.price {
+  color: #007af5;
+}
+
+[data-theme="dark"] .pricing-wraper .pricing-item span.price {
   color: var(--text-color);
 }
 
  
 [data-theme="dark"] .testimonial {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .testimonial-content {
   background: var(--card-bg);
 }
 
+[data-theme="dark"] .testimonial-content blockquote {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .testimonial-content blockquote cite {
+  color: #b8b8b8;
+}
+
  
 [data-theme="dark"] .contact {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .contact-aria {
@@ -196,7 +217,7 @@
 
  
 [data-theme="dark"] .gallery {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .gallery-item {
@@ -205,7 +226,7 @@
 
  
 [data-theme="dark"] .faq {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .faq-content h3 {
@@ -214,7 +235,7 @@
 
  
 [data-theme="dark"] .team {
-  background: var(--service-bg);
+   
 }
 
 [data-theme="dark"] .team-member {
@@ -222,8 +243,13 @@
 }
 
  
+[data-theme="dark"] .clients {
+  background: var(--service-bg);
+}
+
+ 
 [data-theme="dark"] .page-header {
-  background: var(--bg-color);
+   
 }
 
 [data-theme="dark"] .page-header h2 {
@@ -231,6 +257,10 @@
 }
 
  
+[data-theme="dark"] .privacy-policy{
+  background: var(--service-bg);
+}
+
 [data-theme="dark"] .privacy-policy-content{
   background: var(--bg-color) !important;
 }
@@ -263,6 +293,10 @@
   color: #6b8dff;
 }
 
+[data-theme="dark"] .btn-primary {
+    color: #fff;
+}
+
  
 [data-theme="dark"] .breadcrumb {
   background: var(--card-bg);
@@ -287,7 +321,12 @@
 
  
 [data-theme="dark"] section {
-  background-color: var(--bg-color);
+   
+}
+
+[data-theme="dark"] .section-title h2 {
+   
+  color: var(--text-color);
 }
 
 [data-theme="dark"] .section-padding {
@@ -524,7 +563,7 @@
           </ul>
         </div>
         <div class="footer-copyright-text">
-          <p> © 2025 <a href="https://staticmania.com/" target="_blank">StaticMania </a> </p>
+          <p> © 2025 HyMotor. All right reserved. </p>
           <ul>
             
 						
