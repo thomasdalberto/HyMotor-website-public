@@ -471,9 +471,11 @@ color: #6b8dff;
       <div class="col-lg-8 mx-auto">
         <div class="contact-form">
           <h2>Contact Form</h2>
-          <form id="contact-form" class="row" action="https://fabform.io/v/4lkQ1x4WXsSg" method="POST">
+          <form id="contact-form" class="row" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="from_name" value="HyMotor Contact Form">
+            <input type="hidden" name="access_key" value="269b39a2-32f7-454c-a9fb-de2a3019f386">
             <div class="col-md-6">
-              <input type="text" class="form-control" id="exampleFormControlInput1" name="Name" placeholder="Your Name">
+              <input type="text" class="form-control" id="exampleFormControlInput1" name="name" placeholder="Your Name">
             </div>
             <div class="col-md-6">
               <input type="email" class="form-control" id="validationCustom02" required="" name="email" placeholder="Your Email">
@@ -495,9 +497,7 @@ color: #6b8dff;
             </div>
             <p id="contact-form-status"></p>
           </form>
-          <p class="contact-form-generator mt-3">
-            <strong>** </strong> <a href="https://fabform.io/" target="_blank">Static website forms</a>
-          </p>
+          
         </div>
       </div>
     </div>
