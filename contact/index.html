@@ -529,7 +529,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
   
   document.addEventListener('click', function(e) {
-    const navLink = e.target.closest('.navbar-nav .nav-link');
+    const target = e.target;
+    const link = target.closest('a');
+    
+    
+    
+    
+    if (link && link.href.startsWith('mailto:')) {
+      gtag('event', 'email_click', {
+        'event_category': 'contact',
+        'event_label': link.href.replace('mailto:', ''),
+        'value': 1
+      });
+      return;
+    }
+    
+    
+    if (link && link.href.startsWith('tel:')) {
+      gtag('event', 'phone_click', {
+        'event_category': 'contact',
+        'event_label': link.href.replace('tel:', ''),
+        'value': 1
+      });
+      return;
+    }
+    
+    
+    if (link && link.href.match(/\.(pdf|zip|doc|docx|xls|xlsx|ppt|pptx)$/i)) {
+      gtag('event', 'file_download', {
+        'event_category': 'download',
+        'event_label': link.href,
+        'value': 1
+      });
+      return;
+    }
+    
+    
+    if (link && link.href.match(/(facebook|twitter|instagram|linkedin)/i)) {
+      const platform = link.href.match(/(facebook|twitter|instagram|linkedin)/i)[0];
+      gtag('event', 'social_click', {
+        'event_category': 'social',
+        'event_label': platform,
+        'value': 1
+      });
+      return;
+    }
+    
+    
+    if (target.closest('.navbar-brand')) {
+      gtag('event', 'logo_click', {
+        'event_category': 'navigation',
+        'event_label': 'Logo to Home',
+        'value': 1
+      });
+      return;
+    }
+    
+    
+    const navLink = target.closest('.navbar-nav .nav-link');
     if (navLink) {
       const linkText = navLink.textContent.trim();
       const linkHref = navLink.getAttribute('href');
@@ -540,24 +597,11 @@ document.addEventListener('DOMContentLoaded', function() {
         'link_url': linkHref,
         'value': 1
       });
+      return;
     }
-  });
-
-  
-  document.addEventListener('click', function(e) {
-    const logo = e.target.closest('.navbar-brand');
-    if (logo) {
-      gtag('event', 'logo_click', {
-        'event_category': 'navigation',
-        'event_label': 'Logo to Home',
-        'value': 1
-      });
-    }
-  });
-  
-  
-  document.addEventListener('click', function(e) {
-    const menuToggle = e.target.closest('.navbar-toggler');
+    
+    
+    const menuToggle = target.closest('.navbar-toggler');
     if (menuToggle) {
       const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
       gtag('event', 'mobile_menu_toggle', {
@@ -565,48 +609,61 @@ document.addEventListener('DOMContentLoaded', function() {
         'event_label': isExpanded ? 'Close' : 'Open',
         'value': 1
       });
+      return;
     }
-  });
-  
-  
-  document.addEventListener('click', function(e) {
-    if (e.target.matches('.cta-button, .btn-primary, [href*="contact"]')) {
+    
+    
+    if (target.matches('.cta-button, .btn-primary') || 
+        (link && link.href.includes('contact') && !link.href.startsWith('mailto:') && !link.href.startsWith('tel:'))) {
       gtag('event', 'cta_click', {
         'event_category': 'engagement',
-        'event_label': e.target.textContent || e.target.getAttribute('aria-label'),
+        'event_label': target.textContent?.trim() || target.getAttribute('aria-label') || 'CTA',
         'value': 1
       });
+      return;
+    }
+    
+    
+    if (link && 
+        link.hostname !== window.location.hostname && 
+        link.href.startsWith('http') &&
+        !link.href.startsWith('mailto:') &&
+        !link.href.startsWith('tel:')) {
+      gtag('event', 'outbound_click', {
+        'event_category': 'outbound',
+        'event_label': link.href,
+        'value': 1
+      });
+      return;
     }
   });
 
   
+  let scroll25 = false, scroll50 = false, scroll75 = false;
+  
   window.addEventListener('scroll', function() {
-    if (!window.scrollEventSent && window.scrollY > document.body.scrollHeight * 0.25) {
-      window.scrollEventSent = true;
+    const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    
+    if (!scroll25 && scrollPercent >= 0.25) {
+      scroll25 = true;
       gtag('event', 'scroll_25', {
         'event_category': 'engagement',
         'event_label': 'Scrolled 25%',
         'value': 25
       });
     }
-  }, {passive: true});
-
     
-  window.addEventListener('scroll', function() {
-    if (!window.scrollEvent50Sent && window.scrollY > document.body.scrollHeight * 0.5) {
-      window.scrollEvent50Sent = true;
+    if (!scroll50 && scrollPercent >= 0.50) {
+      scroll50 = true;
       gtag('event', 'scroll_50', {
         'event_category': 'engagement',
         'event_label': 'Scrolled 50%',
         'value': 50
       });
     }
-  }, {passive: true});
-  
-  
-  window.addEventListener('scroll', function() {
-    if (!window.scrollEvent75Sent && window.scrollY > document.body.scrollHeight * 0.75) {
-      window.scrollEvent75Sent = true;
+    
+    if (!scroll75 && scrollPercent >= 0.75) {
+      scroll75 = true;
       gtag('event', 'scroll_75', {
         'event_category': 'engagement',
         'event_label': 'Scrolled 75%',
@@ -626,68 +683,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
-
-    
-  document.addEventListener('click', function(e) {
-    if (e.target.matches('a[href^="mailto:"]')) {
-      gtag('event', 'email_click', {
-        'event_category': 'contact',
-        'event_label': e.target.href.replace('mailto:', ''),
-        'value': 1
-      });
-    }
-  });
-  
-  
-  document.addEventListener('click', function(e) {
-    if (e.target.matches('a[href^="tel:"]')) {
-      gtag('event', 'phone_click', {
-        'event_category': 'contact',
-        'event_label': e.target.href.replace('tel:', ''),
-        'value': 1
-      });
-    }
-  });
-  
-  
-  document.addEventListener('click', function(e) {
-    const socialLink = e.target.closest('a[href*="facebook"], a[href*="twitter"], a[href*="instagram"], a[href*="linkedin"]');
-    if (socialLink) {
-      const platform = socialLink.href.match(/(facebook|twitter|instagram|linkedin)/i)[0];
-      gtag('event', 'social_click', {
-        'event_category': 'social',
-        'event_label': platform,
-        'value': 1
-      });
-    }
-  });
-
-    
-  document.addEventListener('click', function(e) {
-    const link = e.target.closest('a');
-    if (link && link.hostname !== window.location.hostname && link.href.startsWith('http')) {
-      gtag('event', 'outbound_click', {
-        'event_category': 'outbound',
-        'event_label': link.href,
-        'value': 1
-      });
-    }
-  });
-  
-  
-  document.addEventListener('click', function(e) {
-    const link = e.target.closest('a');
-    if (link && link.href.match(/\.(pdf|zip|doc|docx|xls|xlsx|ppt|pptx)$/i)) {
-      gtag('event', 'file_download', {
-        'event_category': 'download',
-        'event_label': link.href,
-        'value': 1
-      });
-    }
-  });
 });
 </script>
-
 
 <style>
 #consent-banner {
