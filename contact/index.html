@@ -495,7 +495,98 @@ color: #6b8dff;
   </div>
 </section>
 
-        </div><section class="footer">
+        </div>
+<script>
+
+
+const GA_MEASUREMENT_ID = "G-033VMWLMV5";
+const GEO_API = "";
+const SHOW_FOR_COUNTRIES = "[\u0022AT\u0022,\u0022BE\u0022,\u0022BG\u0022,\u0022HR\u0022,\u0022CY\u0022,\u0022CZ\u0022,\u0022DK\u0022,\u0022EE\u0022,\u0022FI\u0022,\u0022FR\u0022,\u0022DE\u0022,\u0022GR\u0022,\u0022HU\u0022,\u0022IS\u0022,\u0022IE\u0022,\u0022IT\u0022,\u0022LV\u0022,\u0022LI\u0022,\u0022LT\u0022,\u0022LU\u0022,\u0022MT\u0022,\u0022NL\u0022,\u0022NO\u0022,\u0022PL\u0022,\u0022PT\u0022,\u0022RO\u0022,\u0022SK\u0022,\u0022SI\u0022,\u0022ES\u0022,\u0022SE\u0022,\u0022GB\u0022]";
+
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'ad_storage': 'denied',
+  'analytics_storage': 'denied'
+});
+gtag('set', 'ads_data_redaction', true);
+
+
+(function(){
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+  document.head.appendChild(s);
+  s.onload = function(){
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID);
+  };
+})();
+</script>
+
+
+<style>
+#consent-banner {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: system-ui, sans-serif;
+  display: none;
+  z-index: 9999;
+}
+#consent-banner button { margin-left: 8px; }
+</style>
+
+<div id="consent-banner" role="dialog" aria-live="polite">
+  We use anonymous analytics to improve this site. Accept cookies for better accuracy.
+  <button id="consent-accept">Accept</button>
+  <button id="consent-deny">Reject</button>
+</div>
+
+<script>
+async function shouldShowBanner() {
+  if (localStorage.getItem('analyticsConsent') !== null) return false;
+  if (!GEO_API) return true; 
+  try {
+    const r = await fetch(GEO_API);
+    const data = await r.json();
+    return SHOW_FOR_COUNTRIES.includes(data.country);
+  } catch(e) {
+    return true; 
+  }
+}
+
+function setConsent(granted) {
+  if (granted) {
+    gtag('consent', 'update', {'analytics_storage': 'granted'});
+    localStorage.setItem('analyticsConsent', 'granted');
+  } else {
+    gtag('consent', 'update', {'analytics_storage': 'denied'});
+    localStorage.setItem('analyticsConsent', 'denied');
+  }
+  document.getElementById('consent-banner').style.display = 'none';
+}
+
+(async () => {
+  if (await shouldShowBanner()) {
+    document.getElementById('consent-banner').style.display = 'block';
+    document.getElementById('consent-accept').onclick = () => setConsent(true);
+    document.getElementById('consent-deny').onclick = () => setConsent(false);
+  } else {
+    const saved = localStorage.getItem('analyticsConsent');
+    if (saved === 'granted') gtag('consent', 'update', {'analytics_storage': 'granted'});
+  }
+})();
+</script>
+
+<section class="footer">
   <div class="container">
     <div class="row">
       <div class="col-lg-6 col-md-12">
@@ -637,5 +728,6 @@ window.onload = function() {
     form.reset();
   }
 };
-</script></body>
+</script>
+</body>
 </html>
