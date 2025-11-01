@@ -526,6 +526,47 @@ gtag('set', 'ads_data_redaction', true);
 
 
 document.addEventListener('DOMContentLoaded', function() {
+
+  
+  document.addEventListener('click', function(e) {
+    const navLink = e.target.closest('.navbar-nav .nav-link');
+    if (navLink) {
+      const linkText = navLink.textContent.trim();
+      const linkHref = navLink.getAttribute('href');
+      
+      gtag('event', 'navigation_click', {
+        'event_category': 'navigation',
+        'event_label': linkText,
+        'link_url': linkHref,
+        'value': 1
+      });
+    }
+  });
+
+  
+  document.addEventListener('click', function(e) {
+    const logo = e.target.closest('.navbar-brand');
+    if (logo) {
+      gtag('event', 'logo_click', {
+        'event_category': 'navigation',
+        'event_label': 'Logo to Home',
+        'value': 1
+      });
+    }
+  });
+  
+  
+  document.addEventListener('click', function(e) {
+    const menuToggle = e.target.closest('.navbar-toggler');
+    if (menuToggle) {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      gtag('event', 'mobile_menu_toggle', {
+        'event_category': 'navigation',
+        'event_label': isExpanded ? 'Close' : 'Open',
+        'value': 1
+      });
+    }
+  });
   
   
   document.addEventListener('click', function(e) {
