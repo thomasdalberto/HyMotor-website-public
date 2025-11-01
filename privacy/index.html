@@ -550,6 +550,128 @@ gtag('set', 'ads_data_redaction', true);
     gtag('config', GA_MEASUREMENT_ID);
   };
 })();
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('.cta-button, .btn-primary, [href*="contact"]')) {
+      gtag('event', 'cta_click', {
+        'event_category': 'engagement',
+        'event_label': e.target.textContent || e.target.getAttribute('aria-label'),
+        'value': 1
+      });
+    }
+  });
+
+  
+  window.addEventListener('scroll', function() {
+    if (!window.scrollEventSent && window.scrollY > document.body.scrollHeight * 0.25) {
+      window.scrollEventSent = true;
+      gtag('event', 'scroll_25', {
+        'event_category': 'engagement',
+        'event_label': 'Scrolled 25%',
+        'value': 25
+      });
+    }
+  }, {passive: true});
+
+    
+  window.addEventListener('scroll', function() {
+    if (!window.scrollEvent50Sent && window.scrollY > document.body.scrollHeight * 0.5) {
+      window.scrollEvent50Sent = true;
+      gtag('event', 'scroll_50', {
+        'event_category': 'engagement',
+        'event_label': 'Scrolled 50%',
+        'value': 50
+      });
+    }
+  }, {passive: true});
+  
+  
+  window.addEventListener('scroll', function() {
+    if (!window.scrollEvent75Sent && window.scrollY > document.body.scrollHeight * 0.75) {
+      window.scrollEvent75Sent = true;
+      gtag('event', 'scroll_75', {
+        'event_category': 'engagement',
+        'event_label': 'Scrolled 75%',
+        'value': 75
+      });
+    }
+  }, {passive: true});
+  
+  
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      gtag('event', 'form_submit', {
+        'event_category': 'contact',
+        'event_label': 'Contact Form',
+        'value': 1
+      });
+    });
+  }
+
+    
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('a[href^="mailto:"]')) {
+      gtag('event', 'email_click', {
+        'event_category': 'contact',
+        'event_label': e.target.href.replace('mailto:', ''),
+        'value': 1
+      });
+    }
+  });
+  
+  
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('a[href^="tel:"]')) {
+      gtag('event', 'phone_click', {
+        'event_category': 'contact',
+        'event_label': e.target.href.replace('tel:', ''),
+        'value': 1
+      });
+    }
+  });
+  
+  
+  document.addEventListener('click', function(e) {
+    const socialLink = e.target.closest('a[href*="facebook"], a[href*="twitter"], a[href*="instagram"], a[href*="linkedin"]');
+    if (socialLink) {
+      const platform = socialLink.href.match(/(facebook|twitter|instagram|linkedin)/i)[0];
+      gtag('event', 'social_click', {
+        'event_category': 'social',
+        'event_label': platform,
+        'value': 1
+      });
+    }
+  });
+
+    
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (link && link.hostname !== window.location.hostname && link.href.startsWith('http')) {
+      gtag('event', 'outbound_click', {
+        'event_category': 'outbound',
+        'event_label': link.href,
+        'value': 1
+      });
+    }
+  });
+  
+  
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (link && link.href.match(/\.(pdf|zip|doc|docx|xls|xlsx|ppt|pptx)$/i)) {
+      gtag('event', 'file_download', {
+        'event_category': 'download',
+        'event_label': link.href,
+        'value': 1
+      });
+    }
+  });
+});
 </script>
 
 
