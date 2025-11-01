@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (link && link.href.startsWith('mailto:')) {
       gtag('event', 'email_click', {
         'event_category': 'contact',
-        'event_label': link.href.replace('mailto:', ''),
+        'event_label': link.href.replace('mailto:', '').split('@')[0],
         'value': 1
       });
       return;
