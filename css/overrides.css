@@ -1,0 +1,13 @@
+/* Footer logo size */
+footer .img-fluid {
+  height: 126px !important;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Navbar logo size */
+.main-nav .navbar-brand img {
+  height: 24px !important;
+  width: auto;
+  object-fit: contain;
+}
