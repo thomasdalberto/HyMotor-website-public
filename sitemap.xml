@@ -2,13 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://thomasdalberto.github.io/HyMotor-website-public/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://thomasdalberto.github.io/HyMotor-website-public/privacy/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://thomasdalberto.github.io/HyMotor-website-public/terms/</loc>
+    <lastmod>2022-01-08T12:52:02+06:00</lastmod>
+  </url><url>
+    <loc>https://thomasdalberto.github.io/HyMotor-website-public/</loc>
     <lastmod>2022-01-08T12:52:02+06:00</lastmod>
   </url><url>
     <loc>https://thomasdalberto.github.io/HyMotor-website-public/contact/</loc>
@@ -48,5 +45,7 @@
     <lastmod>2022-01-06T11:15:47+06:00</lastmod>
   </url><url>
     <loc>https://thomasdalberto.github.io/HyMotor-website-public/categories/</loc>
+  </url><url>
+    <loc>https://thomasdalberto.github.io/HyMotor-website-public/privacy/</loc>
   </url>
 </urlset>

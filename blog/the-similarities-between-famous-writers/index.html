@@ -19,7 +19,7 @@
 
     
     
-    <link rel="stylesheet" href="/HyMotor-website-public/css/overrides.min.ad289ce513238f4871520e1cacb65d271cd4f9fb85c5ec3a2b4a1c80338375ef0a1225396c2e8de4231846f5009b0c3db18cc638e66b728d12a28779ee8bb1c0.css" integrity="sha512-rSic5RMjj0hxUg4crLZdJxzU&#43;fuFxew6K0ocgDODde8KEiU5bC6N5CMYRvUAmww9sYzGOOZrco0Sood57ouxwA==">
+    <link rel="stylesheet" href="/HyMotor-website-public/css/overrides.min.094ff27299d127de41c4eeb6f1e32bc223935b1e3538a110039ae451399aace81e86f9d67583c976d13b1ac59eea12b8bcb56d38b404c2be8cec3ce1c424f5e2.css" integrity="sha512-CU/ycpnRJ95BxO628eMrwiOTWx41OKEQA5rkUTmarOgehvnWdYPJdtE7GsWe6hK4vLVtOLQEwr6M7DzhxCT14g==">
     
 
     <!-- Favicon -->
@@ -27,6 +27,9 @@
     <link rel="icon" type="image/svg+xml" href="https://thomasdalberto.github.io/HyMotor-website-public/images/favicon.svg"  />
     <link rel="shortcut icon" href="https://thomasdalberto.github.io/HyMotor-website-public/images/favicon.ico"  />
     <link rel="apple-touch-icon" sizes="180x180" href="https://thomasdalberto.github.io/HyMotor-website-public/images/apple-touch-icon.png"  />
+    
+    <!-- Material Symbols (Local) -->
+    <link rel="stylesheet" href="https://thomasdalberto.github.io/HyMotor-website-public/fonts/material-symbols.css" />
     
   </head>
 
@@ -94,6 +97,15 @@
 
 [data-theme="dark"] .service-item i {
   color: var(--text-color);
+  margin-bottom: unset;
+}
+
+[data-theme="dark"] .service-item-icon {
+  color: var(--text-color);
+}
+
+.service-item:hover .service-item-icon {
+  color: #007af5;
 }
 
 [data-theme="dark"] .service-item p {
