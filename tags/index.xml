@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on HyMotor</title>
-    <link>https://thomasdalberto.github.io/HyMotor-website-public/tags/</link>
+    <link>https://www.hymotor.it/tags/</link>
     <description>Recent content in Tags on HyMotor</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 06 Jan 2022 11:18:56 +0600</lastBuildDate>
-    <atom:link href="https://thomasdalberto.github.io/HyMotor-website-public/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.hymotor.it/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Marketing</title>
-      <link>https://thomasdalberto.github.io/HyMotor-website-public/tags/marketing/</link>
+      <link>https://www.hymotor.it/tags/marketing/</link>
       <pubDate>Thu, 06 Jan 2022 11:18:56 +0600</pubDate>
-      <guid>https://thomasdalberto.github.io/HyMotor-website-public/tags/marketing/</guid>
+      <guid>https://www.hymotor.it/tags/marketing/</guid>
       <description></description>
     </item>
     <item>
       <title>News</title>
-      <link>https://thomasdalberto.github.io/HyMotor-website-public/tags/news/</link>
+      <link>https://www.hymotor.it/tags/news/</link>
       <pubDate>Thu, 06 Jan 2022 11:18:56 +0600</pubDate>
-      <guid>https://thomasdalberto.github.io/HyMotor-website-public/tags/news/</guid>
+      <guid>https://www.hymotor.it/tags/news/</guid>
       <description></description>
     </item>
     <item>
       <title>Web Design</title>
-      <link>https://thomasdalberto.github.io/HyMotor-website-public/tags/web-design/</link>
+      <link>https://www.hymotor.it/tags/web-design/</link>
       <pubDate>Thu, 06 Jan 2022 11:18:32 +0600</pubDate>
-      <guid>https://thomasdalberto.github.io/HyMotor-website-public/tags/web-design/</guid>
+      <guid>https://www.hymotor.it/tags/web-design/</guid>
       <description></description>
     </item>
   </channel>
