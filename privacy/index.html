@@ -828,66 +828,273 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<style>
-#consent-banner {
-  position: fixed;
-  bottom: 20px; left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  color: #000;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-family: system-ui, sans-serif;
-  display: none;
-  z-index: 9999;
-}
-#consent-banner button { margin-left: 8px; }
-</style>
+<div id="consent-banner" role="dialog" aria-live="polite" aria-labelledby="consent-title" aria-describedby="consent-description">
+  <div id="consent-banner-content">
+    <div id="consent-banner-text">
+      <strong id="consent-title">Manage cookies</strong>
+      <p id="consent-description">
+        We and selected third parties use cookies or similar technologies for technical purposes and, with your consent,
+        also for the purposes of functionality, experience and measurement as specified in the <a href="https://www.hymotor.it/privacy" target="_blank" rel="noopener">privacy policy</a>. Refusal of consent may
+        render the relevant functions unavailable.<br>
+        You can freely give, refuse or withdraw your consent, at any time.<br>
+        Use the "Accept All" button to consent. Use the "Reject All" button or close this policy to continue without accepting.
+      </p>
+    </div>
+    <div id="consent-banner-actions">
+      <button id="consent-settings" aria-label="Customize cookie settings">Preferences</button>
+      <button id="consent-deny" aria-label="Reject all cookies">Reject All</button>
+      <button id="consent-accept" aria-label="Accept all cookies">Accept All</button>
+    </div>
+  </div>
+</div>
 
-<div id="consent-banner" role="dialog" aria-live="polite">
-  We use anonymous analytics to improve this site. Accept cookies for better accuracy.
-  <button id="consent-accept">Accept</button>
-  <button id="consent-deny">Reject</button>
+
+<div id="consent-settings-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="consent-settings-modal-content">
+    <h2 id="modal-title">Cookie Preferences</h2>
+    <p>We use cookies to improve your experience on our site. You can choose which cookies to allow below.</p>
+    
+    <div id="consent-settings-options">
+      <label>
+        <input type="checkbox" id="essential-cookies" checked disabled aria-describedby="essential-desc">
+        <span>
+          <strong>Essential Cookies</strong> (Always Active)
+          <small id="essential-desc">These cookies are necessary for the website to function and cannot be disabled. They are usually only set in response to actions you take, such as setting privacy preferences or filling in forms.</small>
+        </span>
+      </label>
+      
+      <label>
+        <input type="checkbox" id="analytics-cookies" checked aria-describedby="analytics-desc">
+        <span>
+          <strong>Analytics Cookies</strong>
+          <small id="analytics-desc">These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously. This helps us improve our website and services.</small>
+        </span>
+      </label>
+    </div>
+    
+    <div id="consent-settings-actions">
+      <button id="settings-cancel">Cancel</button>
+      <button id="settings-save">Save Preferences</button>
+    </div>
+  </div>
 </div>
 
 <script>
-async function shouldShowBanner() {
-  if (localStorage.getItem('analyticsConsent') !== null) return false;
-  if (!GEO_API) return true; 
-  try {
-    const r = await fetch(GEO_API);
-    const data = await r.json();
-    return SHOW_FOR_COUNTRIES.includes(data.country);
-  } catch(e) {
-    return true; 
-  }
-}
+(function() {
+  'use strict';
+  
+  
+  const GEO_API = "\"\"";
+  const SHOW_FOR_COUNTRIES = "[\"AT\",\"BE\",\"BG\",\"HR\",\"CY\",\"CZ\",\"DK\",\"EE\",\"FI\",\"FR\",\"DE\",\"GR\",\"HU\",\"IS\",\"IE\",\"IT\",\"LV\",\"LI\",\"LT\",\"LU\",\"MT\",\"NL\",\"NO\",\"PL\",\"PT\",\"RO\",\"SK\",\"SI\",\"ES\",\"SE\",\"GB\"]";
+  const CONSENT_STORAGE_KEY = 'analyticsConsent';
+  const CONSENT_EXPIRY_DAYS = 365;
 
-function setConsent(granted) {
-  if (granted) {
-    gtag('consent', 'update', {'analytics_storage': 'granted'});
-    localStorage.setItem('analyticsConsent', 'granted');
-  } else {
-    gtag('consent', 'update', {'analytics_storage': 'denied'});
-    localStorage.setItem('analyticsConsent', 'denied');
+  
+  function getStoredConsent() {
+    try {
+      const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : null;
+    } catch (e) {
+      console.error('Error reading consent from localStorage:', e);
+      return null;
+    }
   }
-  document.getElementById('consent-banner').style.display = 'none';
-}
 
-(async () => {
-  if (await shouldShowBanner()) {
-    document.getElementById('consent-banner').style.display = 'block';
-    document.getElementById('consent-accept').onclick = () => setConsent(true);
-    document.getElementById('consent-deny').onclick = () => setConsent(false);
-  } else {
-    const saved = localStorage.getItem('analyticsConsent');
-    if (saved === 'granted') gtag('consent', 'update', {'analytics_storage': 'granted'});
+  
+  function isConsentExpired() {
+    try {
+      const stored = getStoredConsent();
+      if (!stored || !stored.timestamp) return true;
+      
+      const expiryTime = stored.timestamp + (CONSENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+      return Date.now() > expiryTime;
+    } catch (e) {
+      console.error('Error checking consent expiry:', e);
+      return true;
+    }
   }
+
+  
+  async function shouldShowBanner() {
+    
+    const stored = getStoredConsent();
+    if (stored !== null && !isConsentExpired()) {
+      console.log('Consent already granted, not showing banner');
+      return false;
+    }
+    
+    
+    if (!GEO_API || !SHOW_FOR_COUNTRIES || SHOW_FOR_COUNTRIES.length === 0) {
+      console.log('No geo-restriction configured, showing banner');
+      return true;
+    }
+    
+    
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      
+      const response = await fetch(GEO_API, { 
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      
+      const data = await response.json();
+      const shouldShow = SHOW_FOR_COUNTRIES.includes(data.country);
+      console.log(`User country: ${data.country}, showing banner: ${shouldShow}`);
+      return shouldShow;
+    } catch (error) {
+      console.warn('Geo-location check failed, showing banner:', error);
+      return true; 
+    }
+  }
+
+  
+  function storeConsent(granted, analytics = true) {
+    const consentData = {
+      granted: granted,
+      analytics: analytics,
+      timestamp: Date.now()
+    };
+    
+    try {
+      localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consentData));
+      console.log('Consent stored:', consentData);
+    } catch (e) {
+      console.error('Error storing consent:', e);
+    }
+  }
+
+  
+  function applyConsent(analytics = true) {
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', {
+        'analytics_storage': analytics ? 'granted' : 'denied'
+      });
+      console.log('Analytics consent updated:', analytics ? 'granted' : 'denied');
+    } else {
+      console.warn('gtag function not available');
+    }
+  }
+
+  
+  function setConsent(granted, analytics = true) {
+    storeConsent(granted, analytics);
+    applyConsent(analytics);
+    hideBanner();
+    
+    
+    if (granted && analytics && typeof gtag === 'function') {
+      gtag('event', 'consent_granted', {
+        'event_category': 'consent',
+        'event_label': analytics ? 'analytics' : 'none'
+      });
+    }
+  }
+
+  
+  function showBanner() {
+    const banner = document.getElementById('consent-banner');
+    banner.style.display = 'block';
+    console.log('Banner displayed');
+    
+    
+    setTimeout(() => {
+      const acceptBtn = document.getElementById('consent-accept');
+      if (acceptBtn) acceptBtn.focus();
+    }, 100);
+  }
+
+  
+  function hideBanner() {
+    const banner = document.getElementById('consent-banner');
+    banner.style.animation = 'slideDown 0.3s ease-out';
+    setTimeout(() => {
+      banner.style.display = 'none';
+      console.log('Banner hidden');
+    }, 300);
+  }
+
+  
+  function showSettings() {
+    const modal = document.getElementById('consent-settings-modal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    
+    const stored = getStoredConsent();
+    if (stored) {
+      document.getElementById('analytics-cookies').checked = stored.analytics !== false;
+    }
+    
+    console.log('Settings modal opened');
+  }
+
+  
+  function hideSettings() {
+    const modal = document.getElementById('consent-settings-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    console.log('Settings modal closed');
+  }
+
+  
+  (async () => {
+    console.log('Initializing consent banner...');
+    
+    
+    if (await shouldShowBanner()) {
+      showBanner();
+      
+      
+      document.getElementById('consent-accept').onclick = () => {
+        console.log('User accepted all cookies');
+        setConsent(true, true);
+      };
+      
+      document.getElementById('consent-deny').onclick = () => {
+        console.log('User rejected all cookies');
+        setConsent(false, false);
+      };
+      
+      document.getElementById('consent-settings').onclick = () => {
+        console.log('User opened settings');
+        showSettings();
+      };
+      
+      
+      document.getElementById('settings-cancel').onclick = hideSettings;
+      
+      document.getElementById('settings-save').onclick = () => {
+        const analyticsEnabled = document.getElementById('analytics-cookies').checked;
+        console.log('User saved preferences, analytics:', analyticsEnabled);
+        setConsent(true, analyticsEnabled);
+        hideSettings();
+      };
+      
+      
+      document.getElementById('consent-settings-modal').onclick = (e) => {
+        if (e.target.id === 'consent-settings-modal') {
+          hideSettings();
+        }
+      };
+      
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('consent-settings-modal').style.display === 'flex') {
+          hideSettings();
+        }
+      });
+    } else {
+      
+      const stored = getStoredConsent();
+      if (stored && stored.granted) {
+        applyConsent(stored.analytics);
+      }
+    }
+  })();
 })();
 </script>
-
 <section class="footer">
   <div class="container">
     <div class="row">
