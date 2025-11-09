@@ -508,8 +508,6 @@ border-color: #26CB77;
 
 
 const GA_MEASUREMENT_ID = "G-5V4XXEQMXV";
-const GEO_API = "";
-const SHOW_FOR_COUNTRIES = "[\u0022AT\u0022,\u0022BE\u0022,\u0022BG\u0022,\u0022HR\u0022,\u0022CY\u0022,\u0022CZ\u0022,\u0022DK\u0022,\u0022EE\u0022,\u0022FI\u0022,\u0022FR\u0022,\u0022DE\u0022,\u0022GR\u0022,\u0022HU\u0022,\u0022IS\u0022,\u0022IE\u0022,\u0022IT\u0022,\u0022LV\u0022,\u0022LI\u0022,\u0022LT\u0022,\u0022LU\u0022,\u0022MT\u0022,\u0022NL\u0022,\u0022NO\u0022,\u0022PL\u0022,\u0022PT\u0022,\u0022RO\u0022,\u0022SK\u0022,\u0022SI\u0022,\u0022ES\u0022,\u0022SE\u0022,\u0022GB\u0022]";
 
 
 window.dataLayer = window.dataLayer || [];
@@ -530,7 +528,7 @@ gtag('set', 'ads_data_redaction', true);
   document.head.appendChild(s);
   s.onload = function(){
     gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
+    gtag('config', GA_MEASUREMENT_ID, { 'anonymize_ip': true });
   };
 })();
 
@@ -751,12 +749,21 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
   'use strict';
   
-  
-  const GEO_API = "\"\"";
-  const SHOW_FOR_COUNTRIES = "[\"AT\",\"BE\",\"BG\",\"HR\",\"CY\",\"CZ\",\"DK\",\"EE\",\"FI\",\"FR\",\"DE\",\"GR\",\"HU\",\"IS\",\"IE\",\"IT\",\"LV\",\"LI\",\"LT\",\"LU\",\"MT\",\"NL\",\"NO\",\"PL\",\"PT\",\"RO\",\"SK\",\"SI\",\"ES\",\"SE\",\"GB\"]";
+
+
+const GEO_API_RAW = "null";
+const SHOW_FOR_COUNTRIES_RAW = "[\u0022AT\u0022,\u0022BE\u0022,\u0022BG\u0022,\u0022HR\u0022,\u0022CY\u0022,\u0022CZ\u0022,\u0022DK\u0022,\u0022EE\u0022,\u0022FI\u0022,\u0022FR\u0022,\u0022DE\u0022,\u0022GR\u0022,\u0022HU\u0022,\u0022IS\u0022,\u0022IE\u0022,\u0022IT\u0022,\u0022LV\u0022,\u0022LI\u0022,\u0022LT\u0022,\u0022LU\u0022,\u0022MT\u0022,\u0022NL\u0022,\u0022NO\u0022,\u0022PL\u0022,\u0022PT\u0022,\u0022RO\u0022,\u0022SK\u0022,\u0022SI\u0022,\u0022ES\u0022,\u0022SE\u0022,\u0022GB\u0022]";
+
+
+const GEO_API = (typeof GEO_API_RAW === 'string' && GEO_API_RAW.trim().length > 4 && /^(https?:)\/\//i.test(GEO_API_RAW.trim()))
+  ? GEO_API_RAW.trim()
+  : null;
+
+
+const SHOW_FOR_COUNTRIES = Array.isArray(SHOW_FOR_COUNTRIES_RAW) ? SHOW_FOR_COUNTRIES_RAW : [];
   const CONSENT_STORAGE_KEY = 'analyticsConsent';
   const CONSENT_EXPIRY_DAYS = 365;
-
+  
   
   function getStoredConsent() {
     try {
@@ -767,7 +774,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return null;
     }
   }
-
+  
   
   function isConsentExpired() {
     try {
@@ -781,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return true;
     }
   }
-
+  
   
   async function shouldShowBanner() {
     
@@ -790,33 +797,42 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('Consent already granted, not showing banner');
       return false;
     }
+
     
-    
-    if (!GEO_API || !SHOW_FOR_COUNTRIES || SHOW_FOR_COUNTRIES.length === 0) {
-      console.log('No geo-restriction configured, showing banner');
+    if (!Array.isArray(SHOW_FOR_COUNTRIES) || SHOW_FOR_COUNTRIES.length === 0) {
+      console.log('No country restriction configured, showing banner');
       return true;
     }
+
     
+    if (!GEO_API) {
+      console.info('No valid GEO_API configured; skipping geo lookup and showing banner');
+      return true;
+    }
+
     
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000);
-      
-      const response = await fetch(GEO_API, { 
-        signal: controller.signal
+
+      const response = await fetch(GEO_API, {
+        signal: controller.signal,
+        headers: { 'Accept': 'application/json' }
       });
       clearTimeout(timeoutId);
-      
+
+      if (!response.ok) throw new Error('Geo API returned ' + response.status);
       const data = await response.json();
-      const shouldShow = SHOW_FOR_COUNTRIES.includes(data.country);
-      console.log(`User country: ${data.country}, showing banner: ${shouldShow}`);
-      return shouldShow;
+      const country = data.country || data.country_code || data.countryCode || '';
+      const shouldShow = SHOW_FOR_COUNTRIES.includes(country);
+      console.log(`User country: ${country}, showing banner: ${shouldShow}`);
+      return !!shouldShow;
     } catch (error) {
       console.warn('Geo-location check failed, showing banner:', error);
       return true; 
     }
   }
-
+  
   
   function storeConsent(granted, analytics = true) {
     const consentData = {
@@ -824,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
       analytics: analytics,
       timestamp: Date.now()
     };
-    
+  
     try {
       localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consentData));
       console.log('Consent stored:', consentData);
@@ -832,7 +848,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error storing consent:', e);
     }
   }
-
+  
   
   function applyConsent(analytics = true) {
     if (typeof gtag === 'function') {
@@ -844,7 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn('gtag function not available');
     }
   }
-
+  
   
   function setConsent(granted, analytics = true) {
     storeConsent(granted, analytics);
@@ -859,7 +875,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   }
-
+  
   
   function showBanner() {
     const banner = document.getElementById('consent-banner');
@@ -872,7 +888,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (acceptBtn) acceptBtn.focus();
     }, 100);
   }
-
+  
   
   function hideBanner() {
     const banner = document.getElementById('consent-banner');
@@ -882,7 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('Banner hidden');
     }, 300);
   }
-
+  
   
   function showSettings() {
     const modal = document.getElementById('consent-settings-modal');
@@ -897,7 +913,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Settings modal opened');
   }
-
+  
   
   function hideSettings() {
     const modal = document.getElementById('consent-settings-modal');
@@ -905,7 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.style.overflow = '';
     console.log('Settings modal closed');
   }
-
+  
   
   (async () => {
     console.log('Initializing consent banner...');
@@ -981,7 +997,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <ul>
             
             
-            <li><a target="_blank" href="mailto:hello@example.com"><i class="ti-email"></i></a></li>
+            <li><a target="_blank" href="mailto:info@hymotor.it"><i class="ti-email"></i></a></li>
             
             
           </ul>
@@ -1006,8 +1022,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Non Critical CSS -->
 
 <link href="https://www.hymotor.it/scss/non-critical.min.css" rel="stylesheet" />
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9rV6yesIygoVKTD6QLf_iCa9eiIIHqZ0&libraries=geometry">
-</script>
+
 <!-- VENDOR JS -->
 <script src="https://www.hymotor.it/vendor/jQuery/jquery.min.js"></script>
 <script src="https://www.hymotor.it/vendor/bootstrap/bootstrap.min.js"></script>
@@ -1015,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://www.hymotor.it/vendor/aos/aos.js"></script>
 <script src="https://www.hymotor.it/vendor/match-height/match-height.js"></script>
 <script src="https://www.hymotor.it/vendor/magnific-popup/magnific-popup.min.js"></script>
-<script src="https://www.hymotor.it/vendor/g-map/gmap.js"></script>
+
 
  
 <script src="https://www.hymotor.it/js/script.min.js"></script>
